@@ -1,0 +1,23 @@
+#list {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+.buttons {
+    float: right;
+}
+#ButtonDanger {
+    margin-left: 0.5rem;
+}
+.row {
+    margin-top: 1rem;
+}
+.done {
+    text-decoration: line-through;/*zacherkivanie*/
+}
+.check {
+    color: green;
+}
+
+.trash {
+    color:red;
+}
