@@ -1,11 +1,11 @@
 import TLT from "./TLitem.jsx"
 
-const TL = ({todos}) => {
+const TL = ({todos, onDeleted}) => {
     const elements = todos.map((item) => {
         const {id, ...ItemProps} = item;//DESTRUCT ID
         return(
         <li key={id} className="list-group-item">
-            <TLT {...ItemProps}/>
+            <TLT {...ItemProps} onDeleted = {() => onDeleted(id)}/>
         </li>
         )
     })

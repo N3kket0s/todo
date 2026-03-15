@@ -12,18 +12,24 @@ class TLT extends React.Component {
 
     onLabel = () => {
         console.log(`нажато на ${this.props.label}`)
-        this.setState({done: true})
+        this.setState(({done}) =>{
+            return {
+                done: !done   //перeключатель true/false
+            }
+        });
     }
 
     onCheckClick = () => {
         console.log(`цвет изменен`)
-        this.setState({check: true});
+        this.setState(({check})=> {
+            return {
+                check: !check   //переключатель true/false
+            }
+
+        });
     }
 
-    onTrashClick = () => {
-            console.log(`цвет изменен красный`)
-            this.setState({trash: true});
-    }
+
 
     render() {
         let myClass = '';
@@ -51,7 +57,7 @@ class TLT extends React.Component {
             <span className={myClass} onClick={this.onLabel}>
                 {label}
             </span>
-            <button onClick={this.onTrashClick} type="button" id="ButtonDanger" className="btn btn-outline-danger buttons">
+            <button onClick={this.props.onDeleted} type="button" id="ButtonDanger" className="btn btn-outline-danger buttons">
                 <i className="fa-solid fa-trash"></i>
             </button>
             <button onClick={this.onCheckClick} type="button" className="btn btn-outline-success buttons">
