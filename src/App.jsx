@@ -5,7 +5,6 @@ import ItemsFilter from "./ItemsFilter.jsx"
 import { useState, useEffect } from "react"
 import AddItems from "./AddItems.jsx"
 
-let maxID = 10000;
 const App = () => {
 
     const [items, setItems] = useState(() => {
@@ -23,28 +22,37 @@ const App = () => {
 
     const deleteItems = (id) => {
         setItems((items) => {
-            const index = items.findIndex((element) => element.id === id)
-            const before = items.slice(0, index)
-            const after = items.slice(index + 1)
-            return [...before, ...after]
+            return items.filter(item => item.id !== id)
         })
     }
     const addItems = (text) => {
+        if (!text.trim()) return;
+
         setItems((items) => {
+            const maxId = items.length > 0 
+             ? Math.max(...items.map((item) => item.id)) : 0;
+
             const newItem = {
-                id: maxID++,
-                label:  text, 
-                important:  false
-            }
-            return [...items, newItem]
+                label: text,
+                important: false,
+                done: false,
+                id: maxId + 1
+            };
+
+            return [...items, newItem];
         })
-    }
+    };
 
     const [term, setTerm] = useState('');
+    const [filter, setFilter] = useState('all');
 
     const onSearchChange = (term) => {
         setTerm(term);
     }
+
+    const onFilterChange = (filter) => {
+        setFilter(filter);
+    }    
 
     const searchItem = (items, term) => {
         if (term.length === 0) {
@@ -55,23 +63,63 @@ const App = () => {
         })
     }
 
-    const visibleItems = searchItem(items, term);
+    const filterItem = (items, filter) => {
+        switch(filter) {
+            case 'active' :
+                return items.filter((item) => !item.done);
+            case 'done' :
+                return items.filter((item) => item.done);
+            default:
+                return items;
+        }
+    }
+
+    const visibleItems = filterItem(searchItem(items, term), filter);
+    const doneCount = items.filter((item) => item.done).length
+    const todoCount = items.length - doneCount
+
+    const toggleDone = (id) => {
+      setItems ((items) => {
+            const index = items.findIndex((item) => item.id === id);
+            const oldItem = items[index];
+            const newItem = {...oldItem, 
+            done: !oldItem.done
+            }
+            return[
+                ...items.slice(0, index),
+                newItem,
+                ...items.slice(index + 1)
+            ];
+        });
+    }
+
+    const toggleImportant = (id) => {
+      setItems ((items) => {
+            const index = items.findIndex((item) => item.id === id);
+            const oldItem = items[index];
+            const newItem = {...oldItem, 
+            important: !oldItem.important
+            }
+            return[
+                ...items.slice(0, index),
+                newItem,
+                ...items.slice(index + 1)
+            ];
+        });
+    }
 
     return(
         <div className="container">
-            <AppHeader/>
-            <div className="row">
-                <div className="col-6">
-                    <Search onSearchChange = {onSearchChange}/>
-                </div>
-                <div className="col-6">
-                    <ItemsFilter/>
-                </div>
-                <div>
-                    <AddItems onAdd = {addItems}/>
-                </div>
-            </div>
-            <TL todos={visibleItems} onDeleted = {deleteItems}/>
+            <AppHeader active={todoCount} done={doneCount}/>
+            <Search onSearchChange = {onSearchChange}/>
+            <ItemsFilter onFilterChange ={onFilterChange}/>
+            <TL 
+            todos={visibleItems}
+            onDeleted = {deleteItems}
+            onToggleDone = {toggleDone}
+            onToggleImportant = {toggleImportant}
+             />
+             <AddItems onAdd = {addItems}/>
             <span>{(new Date()).toString()}</span>
         </div>
     )

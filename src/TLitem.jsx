@@ -1,71 +1,66 @@
 import React from "react";
 
-
-
 class TLT extends React.Component {
-
-    state = {
-        done: false,
-        check: false,
-        trash: false
-    }
-
-    onLabel = () => {
-        console.log(`нажато на ${this.props.label}`)
-        this.setState(({done}) =>{
-            return {
-                done: !done   //перeключатель true/false
-            }
-        });
-    }
-
-    onCheckClick = () => {
-        console.log(`цвет изменен`)
-        this.setState(({check})=> {
-            return {
-                check: !check   //переключатель true/false
-            }
-
-        });
-    }
-
-
-
     render() {
+
+        const {label,
+            onDeleted,
+            onToggleDone,
+            onToggleImportant,
+            done,
+            important
+        } = this.props
+        
+        
         let myClass = '';
-        if(this.state.done) {
+        if(done) {
             myClass += ' done';
         }
 
-        if(this.state.check) {
-            myClass = myClass + ' check';
+        if(important) {
+            myClass = myClass + ' important';
         }
 
-        if(this.state.trash) {
-            myClass = myClass + ' trash';
-        }
+        return(
+            <div className="row">
+                <div className="col-6">
+                    <span className={myClass} onClick={onToggleDone}>
+                        {label}
+                    </span>
+                </div>
+                <div className="col-6">
+                {done ? (
+                    <button 
+                    onClick={onToggleDone} 
+                    type="button" 
+                    id="bsucces"
+                    className="btn btn-outline-warning buttons">
+                        <i className="fa-solid fa-arrow-left"></i>
+                    </button>
+                )   :   (
+                    <button 
+                    onClick={onToggleDone} 
+                    type="button" 
+                    className="btn btn-outline-success buttons">
+                        <i className="fa-solid fa-check"></i>
+                    </button>
+                )}
 
-        const {label} = this.props
+                    <button onClick={onToggleImportant}
+                    type="button"
+                    className="btn btn-outline-primary buttons">
+                        <i className="fa-solid fa-exclamation"></i>
+                    </button> 
 
-        // const itemsStyle = {
-        //     color: important ? 'red' : 'black'
-        // }
-
-
-    return(
-        <div>
-            <span className={myClass} onClick={this.onLabel}>
-                {label}
-            </span>
-            <button onClick={this.props.onDeleted} type="button" id="ButtonDanger" className="btn btn-outline-danger buttons">
-                <i className="fa-solid fa-trash"></i>
-            </button>
-            <button onClick={this.onCheckClick} type="button" className="btn btn-outline-success buttons">
-                <i className="fa-solid fa-check"></i>
-            </button>
-        </div>
+                    <button onClick={onDeleted}
+                    type="button" id="ButtonDanger" 
+                    className="btn btn-outline-danger buttons">
+                        <i className="fa-solid fa-trash"></i>
+                    </button>                    
+                </div>
+            </div>
         )
-    }
+        }
 };
 
 export default TLT

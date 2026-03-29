@@ -21,3 +21,22 @@
 .trash {
     color:red;
 }
+/* #bsucces{
+    margin-right: 1rem;
+} */
+#search {
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+#filter {
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+.my-button {
+    float: right;
+    margin-top: 1rem;
+}
+.important {
+    color:red;
+}
